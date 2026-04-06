@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028) -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yart Supplies - Menu</title>
+  <link rel="icon" type="image/svg+xml" href="./Yart Supplies - Menu_files/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link href="./Yart Supplies - Menu_files/css2" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #e0e0e0;
+      background: #000;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; border: none; font-family: inherit; }
+
+    /* ── Age Gate ── */
+    .age-gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      color: #e0e0e0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .age-gate { transition: opacity .4s; }
+    .age-gate.fade-out { opacity: 0; pointer-events: none; }
+    .age-gate.hidden { display: none; }
+    .age-card {
+      background: #000; border: 1px solid #1a1a1a; border-radius: 20px;
+      padding: 32px 28px; width: 100%; max-width: 360px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      text-align: center;
+    }
+    .age-logo { height: 36px; width: auto; margin-bottom: 4px; }
+    .age-gate h2 { font-size: 1.15rem; font-weight: 600; line-height: 1.4; }
+    .age-gate p { font-size: .78rem; color: rgba(255,255,255,.4); }
+    /* Custom country dropdown */
+    .country-trigger {
+      width: 100%; padding: 11px 16px; border-radius: 10px;
+      background: #1a1a1a; border: 1px solid #2a2a2a; color: #888;
+      font-size: .82rem; font-family: inherit; text-align: left;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: border-color .2s;
+    }
+    .country-trigger.has-value { color: #e0e0e0; }
+    .country-trigger:hover { border-color: #444; }
+    .country-trigger::after { content: '▾'; color: #555; font-size: .7rem; }
+    .country-dropdown {
+      display: none; width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a;
+      border-radius: 12px; overflow: hidden; max-height: 240px;
+      flex-direction: column;
+    }
+    .country-dropdown.open { display: flex; }
+    .country-search {
+      width: 100%; padding: 10px 14px; background: #141414; border: none;
+      border-bottom: 1px solid #222; color: #e0e0e0; font-size: .8rem;
+      font-family: inherit; outline: none;
+    }
+    .country-search::placeholder { color: #555; }
+    .country-list {
+      flex: 1; overflow-y: auto; padding: 4px 6px;
+    }
+    .country-list::-webkit-scrollbar { width: 4px; }
+    .country-list::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    .country-opt {
+      padding: 9px 12px; border-radius: 8px; font-size: .78rem; color: #aaa;
+      cursor: pointer; transition: background .12s, color .12s;
+    }
+    .country-opt:hover { background: #222; color: #e0e0e0; }
+    .country-opt.selected { background: #fff; color: #0e0e0e; font-weight: 600; }
+    .age-btns { display: flex; gap: 10px; width: 100%; }
+    .age-btns button {
+      flex: 1; padding: 11px 0; border-radius: 10px; font-weight: 600; font-size: .85rem;
+      transition: transform .15s, background .2s;
+    }
+    .age-btns button:active { transform: scale(.96); }
+    .age-yes { background: #fff; color: #0e0e0e; }
+    .age-yes:hover { background: #e0e0e0; }
+    .age-no  { background: transparent; color: #666; border: 1px solid rgba(255,255,255,.1); }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed; top: 22px; left: 0; right: 0; z-index: 100;
+      background: rgba(0,0,0,.88); backdrop-filter: blur(14px);
+      border-bottom: 1px solid #1e1e1e;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; gap: 12px;
+    }
+    .logo { display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
+    .logo img { height: 26px; width: auto; display: block; }
+    .nav-links {
+      display: flex; gap: 24px; font-size: .82rem; font-weight: 500;
+      position: absolute; left: 50%; transform: translateX(-50%);
+    }
+    .nav-links a { color: #777; transition: color .2s; display: flex; align-items: center; gap: 4px; }
+    .nav-links a:hover { color: #e0e0e0; }
+    .nav-tg { display: flex; align-items: center; }
+    .nav-tg svg { width: 14px; height: 14px; fill: #777; transition: fill .2s; }
+    .nav-tg:hover svg { fill: #e0e0e0; }
+    .nav-cta {
+      background: #fff; color: #0e0e0e; padding: 8px 20px;
+      border-radius: 10px; font-size: .78rem; font-weight: 600;
+      transition: background .2s; white-space: nowrap;
+    }
+    .nav-cta:hover { background: #e0e0e0; }
+
+    /* ── Trust Bar ── */
+    .trust-bar {
+      text-align: center; padding: 10px 16px;
+      font-size: .73rem; font-weight: 500; color: #666; letter-spacing: .28px;
+    }
+    .trust-bar span { color: #c9a96e; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center; padding: 56px 20px 40px;
+      background: radial-gradient(circle at top, #0a0a0a 0%, #000 62%);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4.4vw, 3.15rem);
+      font-weight: 700; letter-spacing: -1px; line-height: 1.08; color: #f0f0f0;
+    }
+    .hero h1 em { font-style: normal; color: #fff; }
+    .hero p {
+      margin-top: 14px; font-size: .92rem; color: #666; max-width: 420px;
+      margin-left: auto; margin-right: auto; line-height: 1.6;
+    }
+    .hero-btn {
+      display: inline-block; margin-top: 26px;
+      background: #fff; color: #0e0e0e; padding: 13px 42px;
+      border-radius: 12px; font-weight: 600; font-size: .9rem;
+      transition: background .2s, transform .15s;
+    }
+    .hero-btn:hover { background: #e0e0e0; }
+    .hero-btn:active { transform: scale(.97); }
+
+    /* ── Marquee ── */
+    .marquee-wrap {
+      overflow: hidden; background: #0a0a0a; color: #888;
+      padding: 10px 0; white-space: nowrap; border-top: 1px solid #1e1e1e; border-bottom: 1px solid #1e1e1e;
+    }
+    .marquee-track {
+      display: inline-flex; gap: 0;
+      animation: marquee 24s linear infinite;
+    }
+    .marquee-track span {
+      display: inline-block; padding: 0 30px;
+      font-size: .72rem; font-weight: 600; letter-spacing: .5px; text-transform: uppercase;
+    }
+    .marquee-track span::before { content: "· "; opacity: .45; }
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── Section Shared ── */
+    section { padding: 48px 20px; max-width: 1040px; margin: 0 auto; }
+    .section-title {
+      text-align: center; font-size: 1.28rem; font-weight: 700;
+      letter-spacing: -.35px; margin-bottom: 28px; color: #f0f0f0;
+    }
+
+    /* ── Products ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .product-card {
+      background: #000; border: 1px solid #1a1a1a; border-radius: 16px;
+      text-align: left; transition: transform .2s, box-shadow .25s, border-color .25s;
+      position: relative; overflow: hidden;
+    }
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      border-color: #2a2a2a;
+    }
+    .product-badge {
+      position: absolute; top: 12px; right: 12px; z-index: 2;
+      background: rgba(40,180,80,.9); color: #fff; font-size: .58rem;
+      font-weight: 700; padding: 5px 10px; border-radius: 8px; text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .product-img {
+      width: 100%; aspect-ratio: 1; overflow: hidden; background: #000;
+    }
+    .product-img img {
+      width: 100%; height: 100%; object-fit: contain; display: block;
+    }
+    .product-info {
+      padding: 14px 16px 16px; border-top: 1px solid #1a1a1a;
+    }
+    .product-card h3 { font-size: .88rem; font-weight: 600; margin-bottom: 6px; color: #e0e0e0; }
+    .product-stars { color: #c9a96e; font-size: .68rem; letter-spacing: .5px; margin-bottom: 4px; }
+    .product-price { font-size: .9rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .product-detail { font-size: .68rem; color: #555; margin-bottom: 0; line-height: 1.4; display: none; }
+    .product-btn {
+      display: inline-block;
+      background: #fff; color: #0e0e0e; padding: 6px 16px;
+      border-radius: 8px; font-size: .65rem; font-weight: 600;
+      transition: background .2s;
+    }
+
+    /* ── Warning Header ── */
+    .warn-bar {
+      background: #000; border-bottom: 1px solid #1a1a1a;
+      text-align: center; padding: 5px 12px;
+      font-size: .58rem; font-weight: 600; letter-spacing: .6px;
+      text-transform: uppercase; color: #fff;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 101;
+      height: 22px;
+    }
+    .warn-text {
+      display: inline-block;
+      transition: opacity .15s, transform .15s;
+    }
+    .warn-text.glitch {
+      opacity: 0; transform: translateX(3px) skewX(-8deg);
+    }
+
+    /* ── Welcome Notification ── */
+    .welcome-overlay {
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(0,0,0,.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 1; transition: opacity .4s;
+    }
+    .welcome-overlay.fade-out { opacity: 0; pointer-events: none; }
+    .welcome-box {
+      background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 16px;
+      padding: 28px 24px; max-width: 340px; width: 100%; text-align: center;
+    }
+    .welcome-box p {
+      font-size: .8rem; color: #aaa; line-height: 1.6; margin-bottom: 18px;
+    }
+    .welcome-btn {
+      width: 100%; padding: 11px; border-radius: 10px;
+      font-size: .82rem; font-weight: 600;
+      background: #333; color: #666; cursor: not-allowed;
+      transition: background .3s, color .3s;
+    }
+    .welcome-btn.active {
+      background: #fff; color: #0e0e0e; cursor: pointer;
+    }
+    .welcome-btn.active:hover { background: #e0e0e0; }
+
+    /* ── Cart Icon (nav) ── */
+    .nav-cart {
+      background: none; color: #777; display: flex; align-items: center;
+      padding: 6px; transition: color .2s; position: relative;
+    }
+    .nav-cart:hover { color: #e0e0e0; }
+    .nav-cart svg { width: 18px; height: 18px; fill: currentColor; }
+    .nav-cart-count {
+      position: absolute; top: 0; right: -2px;
+      background: #fff; color: #000; font-size: .5rem; font-weight: 700;
+      width: 14px; height: 14px; border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
+    }
+    .nav-cart-count.show { display: flex; }
+    .product-btn:hover { background: #e0e0e0; }
+
+    /* ── Order Summary Drawer ── */
+    .order-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 200;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .order-overlay.open { opacity: 1; pointer-events: auto; }
+    .order-drawer {
+      position: fixed; top: 0; right: 0; bottom: 0; width: 360px; max-width: 90vw;
+      background: #141414; border-left: 1px solid #222; z-index: 201;
+      transform: translateX(100%); transition: transform .3s ease;
+      display: flex; flex-direction: column;
+    }
+    .order-drawer.open { transform: translateX(0); }
+    .order-drawer-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 20px; border-bottom: 1px solid #1e1e1e;
+    }
+    .order-drawer-header h3 { font-size: .95rem; font-weight: 700; color: #f0f0f0; }
+    .order-close {
+      background: none; color: #666; font-size: 1.3rem; padding: 4px 8px;
+      transition: color .2s;
+    }
+    .order-close:hover { color: #e0e0e0; }
+    .order-items {
+      flex: 1; overflow-y: auto; padding: 16px 20px;
+    }
+    .order-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #1e1e1e;
+      font-size: .82rem;
+    }
+    .order-item-name { color: #ccc; flex: 1; }
+    .order-item-price { color: #fff; font-weight: 600; margin-left: 12px; white-space: nowrap; }
+    .order-item-remove {
+      background: none; color: #555; font-size: .7rem; margin-left: 10px;
+      padding: 2px 6px; border: 1px solid #333; border-radius: 6px;
+      transition: color .2s, border-color .2s;
+    }
+    .order-item-remove:hover { color: #e57373; border-color: #e57373; }
+    .order-empty {
+      color: #555; font-size: .82rem; text-align: center; padding: 40px 0;
+    }
+    .order-footer {
+      border-top: 1px solid #1e1e1e; padding: 16px 20px;
+    }
+    .order-line {
+      display: flex; justify-content: space-between;
+      font-size: .8rem; color: #888; padding: 4px 0;
+    }
+    .order-line.total {
+      font-size: .92rem; font-weight: 700; color: #fff;
+      border-top: 1px solid #333; margin-top: 8px; padding-top: 10px;
+    }
+    .order-eta {
+      display: flex; align-items: center; gap: 8px;
+      background: #1a1a1a; border: 1px solid #252525; border-radius: 10px;
+      padding: 10px 14px; margin-bottom: 12px;
+    }
+    .order-eta-icon {
+      font-size: .85rem; flex-shrink: 0;
+    }
+    .order-eta-text {
+      font-size: .72rem; color: #888; line-height: 1.4;
+    }
+    .order-eta-text strong {
+      color: #7ecba1; font-weight: 600;
+    }
+    .order-copy-btn {
+      width: 100%; margin-top: 14px; padding: 12px;
+      background: #fff; color: #0e0e0e; border-radius: 10px;
+      font-size: .82rem; font-weight: 700; transition: background .2s;
+    }
+    .order-copy-btn:hover { background: #e0e0e0; }
+    .order-copy-btn.copied { background: #4caf50; color: #fff; }
+    .order-toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px);
+      background: #fff; color: #0e0e0e; padding: 10px 24px; border-radius: 10px;
+      font-size: .78rem; font-weight: 600; z-index: 300;
+      opacity: 0; transition: opacity .25s, transform .25s;
+      pointer-events: none;
+    }
+    .order-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .order-item-flavor { font-size: .68rem; color: #666; margin-top: 1px; }
+
+    /* ── Flavor Picker Modal ── */
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 500;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .modal-bg.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: #161616; border: 1px solid #282828; border-radius: 16px;
+      width: 340px; max-width: 100%; max-height: 80vh; display: flex; flex-direction: column;
+      transform: scale(.95); transition: transform .2s;
+    }
+    .modal-bg.open .modal-box { transform: scale(1); }
+    .modal-header {
+      padding: 18px 20px 14px; border-bottom: 1px solid #1e1e1e;
+    }
+    .modal-header h3 { font-size: .92rem; font-weight: 700; color: #f0f0f0; }
+    .modal-header p { font-size: .72rem; color: #666; margin-top: 3px; }
+    .flavor-list {
+      flex: 1; overflow-y: auto; padding: 8px 12px;
+    }
+    .flavor-list::-webkit-scrollbar { width: 4px; }
+    .flavor-list::-webkit-scrollbar-track { background: transparent; }
+    .flavor-list::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    .flavor-item {
+      padding: 10px 14px; border-radius: 10px; font-size: .8rem; color: #aaa;
+      cursor: pointer; transition: background .15s, color .15s; margin: 2px 0;
+    }
+    .flavor-item:hover { background: #1e1e1e; color: #e0e0e0; }
+    .flavor-item.selected { background: #fff; color: #0e0e0e; font-weight: 600; }
+    .modal-footer {
+      padding: 12px 16px; border-top: 1px solid #1e1e1e;
+      display: flex; gap: 10px;
+    }
+    .modal-footer button {
+      flex: 1; padding: 11px; border-radius: 10px; font-size: .78rem; font-weight: 600;
+      transition: background .2s;
+    }
+    .modal-add { background: #fff; color: #0e0e0e; }
+    .modal-add:hover { background: #e0e0e0; }
+    .modal-add:disabled { background: #333; color: #666; cursor: not-allowed; }
+    .modal-cancel { background: transparent; color: #777; border: 1px solid #333; }
+    .modal-cancel:hover { color: #e0e0e0; border-color: #555; }
+
+    /* ── Payment Popup ── */
+    .pay-popup .modal-box { width: 380px; text-align: center; }
+    .pay-body { padding: 24px 24px 20px; }
+    .pay-body .pay-icon { font-size: 2rem; margin-bottom: 12px; }
+    .pay-body h3 { font-size: 1rem; font-weight: 700; color: #f0f0f0; margin-bottom: 8px; }
+    .pay-body p { font-size: .8rem; color: #888; line-height: 1.55; margin-bottom: 6px; }
+    .pay-body .pay-tg {
+      display: inline-block; margin-top: 10px; padding: 11px 28px;
+      background: #fff; color: #0e0e0e; border-radius: 10px;
+      font-size: .82rem; font-weight: 700; transition: background .2s;
+    }
+    .pay-body .pay-tg:hover { background: #e0e0e0; }
+    .pay-methods {
+      padding: 16px 24px 20px; border-top: 1px solid #1e1e1e;
+    }
+    .pay-methods p { font-size: .68rem; color: #555; margin-bottom: 10px; }
+    .pay-logos {
+      display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+    }
+    .pay-logo {
+      background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: 6px 14px; font-size: .65rem; font-weight: 700; color: #999;
+      letter-spacing: .3px;
+    }
+    .pay-close {
+      position: absolute; top: 14px; right: 16px; background: none;
+      color: #555; font-size: 1.2rem; transition: color .2s;
+    }
+    .pay-close:hover { color: #e0e0e0; }
+    .pay-popup .modal-box { position: relative; }
+
+    /* ── Promo Banner ── */
+    .promo-banner {
+      text-align: center; padding: 12px 20px;
+      border: 1px solid #1e1e1e; border-radius: 10px;
+      margin-bottom: 28px; max-width: 540px; margin-left: auto; margin-right: auto;
+      background: #0a0a0a;
+    }
+    .promo-banner p {
+      font-size: .8rem; font-weight: 600; color: #e0e0e0; letter-spacing: .1px;
+    }
+    .promo-banner span { color: #c9a96e; }
+
+    /* ── Authenticity Bar ── */
+    .auth-bar {
+      text-align: center; padding: 20px; margin-bottom: 28px;
+    }
+    .auth-bar p {
+      font-size: .72rem; color: #555; line-height: 1.6; max-width: 480px;
+      margin: 0 auto;
+    }
+    .auth-bar strong { color: #888; font-weight: 600; }
+
+    /* ── Product Section Headers ── */
+    .product-section-title {
+      font-size: 1.05rem; font-weight: 700; color: #e0e0e0;
+      margin-bottom: 16px; margin-top: 36px; padding-bottom: 8px;
+      border-bottom: 1px solid #1e1e1e; letter-spacing: -.2px;
+    }
+    .product-section-title:first-of-type { margin-top: 0; }
+
+    /* ── Categories ── */
+    .categories {
+      display: flex; justify-content: center; gap: 24px;
+      max-width: 760px; margin: 0 auto; flex-wrap: nowrap;
+    }
+    .cat-card {
+      position: relative; border-radius: 50%;
+      text-align: center; transition: transform .2s;
+      width: 180px; height: 180px; flex-shrink: 0;
+    }
+    /* Glow layer */
+    .cat-card::before {
+      content: ''; position: absolute;
+      inset: -32px; border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,.18) 0%, transparent 60%);
+      opacity: 0; transition: opacity .8s ease;
+      z-index: 0; filter: blur(44px); pointer-events: none;
+    }
+    .cat-card.glow::before { opacity: 1; }
+    /* Inner card */
+    .cat-card-inner {
+      position: relative; z-index: 1; overflow: hidden; border-radius: 50%;
+      border: 1px solid #222; transition: border-color .2s, box-shadow .2s;
+      width: 100%; height: 100%; background: #000;
+    }
+    .cat-card:hover { transform: translateY(-2px); }
+    .cat-card:hover .cat-card-inner {
+      border-color: #333; box-shadow: 0 8px 22px rgba(0,0,0,.25);
+    }
+    .cat-card img {
+      width: 100%; height: 100%; object-fit: cover; display: block; background: #000;
+    }
+    .cat-card .cat-overlay {
+      position: absolute; inset: 0; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px;
+      background: radial-gradient(circle, rgba(0,0,0,.35) 0%, rgba(0,0,0,.6) 100%);
+    }
+    .cat-card h3 { font-size: .85rem; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+    .cat-card .cat-btn {
+      background: #fff; color: #0e0e0e; padding: 6px 16px;
+      border-radius: 8px; font-size: .68rem; font-weight: 600;
+      transition: background .2s;
+    }
+    .cat-card:hover .cat-btn { background: #e0e0e0; }
+
+    /* ── Reviews ── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .review-card {
+      background: #161616; border: 1px solid #222; border-radius: 16px; padding: 20px;
+    }
+    .review-stars { color: #c9a96e; font-size: .8rem; margin-bottom: 8px; letter-spacing: 1px; }
+    .review-text { font-size: .82rem; line-height: 1.58; color: #777; margin-bottom: 10px; }
+    .review-author { font-size: .78rem; font-weight: 600; color: #ccc; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 640px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid #1e1e1e; padding: 16px 0;
+    }
+    .faq-q {
+      width: 100%; background: none; text-align: left;
+      font-size: .85rem; font-weight: 600; display: flex;
+      justify-content: space-between; align-items: center;
+      padding: 0; color: #e0e0e0;
+    }
+    .faq-q::after { content: "+"; font-size: 1.1rem; font-weight: 300; color: #555; transition: transform .2s; }
+    .faq-q.open::after { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s;
+      font-size: .8rem; line-height: 1.65; color: #777; padding: 0;
+    }
+    .faq-a.open { max-height: 300px; padding-top: 10px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center; padding: 32px 20px; border-top: 1px solid #1e1e1e;
+      font-size: .72rem; color: #444; font-weight: 500;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links { position: static; transform: none; }
+      nav { padding: 12px 16px; }
+      .categories { gap: 16px; }
+      .cat-card { width: 140px; height: 140px; }
+      .section-title { font-size: 1.1rem; }
+    }
+    @media (max-width: 640px) {
+      .categories { gap: 10px; }
+      .cat-card { width: 105px; height: 105px; }
+      .cat-card h3 { font-size: .62rem; }
+      .cat-card .cat-btn { display: none; }
+      .age-card { padding: 24px 20px; border-radius: 16px; }
+      .age-logo { height: 30px; }
+      .nav-links { display: none; }
+      .nav-cta { padding: 7px 16px; font-size: .72rem; }
+      .hero { padding: 32px 16px 28px; }
+      .hero h1 { font-size: 1.7rem; letter-spacing: -.5px; }
+      .hero p { font-size: .82rem; margin-top: 10px; }
+      .hero-btn { padding: 11px 34px; font-size: .82rem; margin-top: 20px; }
+      section { padding: 32px 14px; }
+      .section-title { font-size: 1.05rem; margin-bottom: 20px; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .product-card { border-radius: 12px; }
+      .product-card h3 { font-size: .76rem; }
+      .product-price { font-size: .78rem; }
+      .product-info { padding: 10px 12px 12px; }
+      .product-btn { padding: 5px 12px; font-size: .6rem; }
+      .product-badge { font-size: .5rem; padding: 3px 7px; top: 8px; right: 8px; }
+      .product-stars { font-size: .6rem; }
+      .product-section-title { font-size: .92rem; margin-top: 28px; }
+      .promo-banner { padding: 10px 14px; margin-bottom: 24px; }
+      .promo-banner p { font-size: .76rem; }
+      .reviews-grid { grid-template-columns: 1fr; gap: 10px; }
+      .review-card { padding: 16px; }
+      .trust-bar { font-size: .66rem; padding: 8px 12px; }
+      .faq-q { font-size: .8rem; }
+      .faq-a { font-size: .75rem; }
+      footer { font-size: .65rem; padding: 24px 16px; }
+      /* Modals */
+      .modal-box { width: 100%; max-width: 320px; border-radius: 14px; }
+      .modal-header { padding: 14px 16px 10px; }
+      .modal-header h3 { font-size: .85rem; }
+      .modal-footer { padding: 10px 12px; }
+      .flavor-item { padding: 9px 12px; font-size: .76rem; }
+      .pay-popup .modal-box { width: 100%; max-width: 340px; }
+      .pay-body { padding: 20px 18px 16px; }
+      .pay-body h3 { font-size: .92rem; }
+      .pay-body p { font-size: .74rem; }
+      .pay-logos { gap: 6px; }
+      .pay-logo { padding: 5px 10px; font-size: .58rem; }
+      /* Order drawer full width on mobile */
+      .order-drawer { width: 100%; max-width: 100vw; }
+    }
+    @media (max-width: 380px) {
+      .products-grid { grid-template-columns: 1fr; gap: 10px; }
+      .hero h1 { font-size: 1.5rem; }
+      .cat-card { width: 90px; height: 90px; }
+      .cat-card h3 { font-size: .54rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Age Gate -->
+<div class="age-gate fade-out hidden" id="ageGate">
+  <div class="age-card">
+    <img src="./Yart Supplies - Menu_files/logo.svg" alt="Puffed" class="age-logo">
+    <h2>Are you 21 or older?</h2>
+    <p>Verify your age and select your country to continue.</p>
+    <button class="country-trigger has-value" id="countryTrigger">United States</button>
+    <div class="country-dropdown" id="countryDropdown">
+      <input type="text" class="country-search" id="countrySearch" placeholder="Search country...">
+      <div class="country-list" id="countryList"><div class="country-opt">United States</div><div class="country-opt">Canada</div><div class="country-opt">United Kingdom</div><div class="country-opt">Afghanistan</div><div class="country-opt">Albania</div><div class="country-opt">Algeria</div><div class="country-opt">Argentina</div><div class="country-opt">Armenia</div><div class="country-opt">Australia</div><div class="country-opt">Austria</div><div class="country-opt">Azerbaijan</div><div class="country-opt">Bahamas</div><div class="country-opt">Bahrain</div><div class="country-opt">Bangladesh</div><div class="country-opt">Barbados</div><div class="country-opt">Belarus</div><div class="country-opt">Belgium</div><div class="country-opt">Belize</div><div class="country-opt">Bolivia</div><div class="country-opt">Bosnia and Herzegovina</div><div class="country-opt">Brazil</div><div class="country-opt">Bulgaria</div><div class="country-opt">Cambodia</div><div class="country-opt">Cameroon</div><div class="country-opt">Chile</div><div class="country-opt">China</div><div class="country-opt">Colombia</div><div class="country-opt">Costa Rica</div><div class="country-opt">Croatia</div><div class="country-opt">Cuba</div><div class="country-opt">Cyprus</div><div class="country-opt">Czech Republic</div><div class="country-opt">Denmark</div><div class="country-opt">Dominican Republic</div><div class="country-opt">Ecuador</div><div class="country-opt">Egypt</div><div class="country-opt">El Salvador</div><div class="country-opt">Estonia</div><div class="country-opt">Ethiopia</div><div class="country-opt">Finland</div><div class="country-opt">France</div><div class="country-opt">Georgia</div><div class="country-opt">Germany</div><div class="country-opt">Ghana</div><div class="country-opt">Greece</div><div class="country-opt">Guatemala</div><div class="country-opt">Haiti</div><div class="country-opt">Honduras</div><div class="country-opt">Hong Kong</div><div class="country-opt">Hungary</div><div class="country-opt">Iceland</div><div class="country-opt">India</div><div class="country-opt">Indonesia</div><div class="country-opt">Iran</div><div class="country-opt">Iraq</div><div class="country-opt">Ireland</div><div class="country-opt">Israel</div><div class="country-opt">Italy</div><div class="country-opt">Jamaica</div><div class="country-opt">Japan</div><div class="country-opt">Jordan</div><div class="country-opt">Kazakhstan</div><div class="country-opt">Kenya</div><div class="country-opt">Kuwait</div><div class="country-opt">Latvia</div><div class="country-opt">Lebanon</div><div class="country-opt">Lithuania</div><div class="country-opt">Luxembourg</div><div class="country-opt">Malaysia</div><div class="country-opt">Mexico</div><div class="country-opt">Morocco</div><div class="country-opt">Myanmar</div><div class="country-opt">Nepal</div><div class="country-opt">Netherlands</div><div class="country-opt">New Zealand</div><div class="country-opt">Nicaragua</div><div class="country-opt">Nigeria</div><div class="country-opt">North Korea</div><div class="country-opt">Norway</div><div class="country-opt">Oman</div><div class="country-opt">Pakistan</div><div class="country-opt">Panama</div><div class="country-opt">Paraguay</div><div class="country-opt">Peru</div><div class="country-opt">Philippines</div><div class="country-opt">Poland</div><div class="country-opt">Portugal</div><div class="country-opt">Puerto Rico</div><div class="country-opt">Qatar</div><div class="country-opt">Romania</div><div class="country-opt">Russia</div><div class="country-opt">Saudi Arabia</div><div class="country-opt">Serbia</div><div class="country-opt">Singapore</div><div class="country-opt">Slovakia</div><div class="country-opt">Slovenia</div><div class="country-opt">South Africa</div><div class="country-opt">South Korea</div><div class="country-opt">Spain</div><div class="country-opt">Sri Lanka</div><div class="country-opt">Sweden</div><div class="country-opt">Switzerland</div><div class="country-opt">Taiwan</div><div class="country-opt">Tanzania</div><div class="country-opt">Thailand</div><div class="country-opt">Trinidad and Tobago</div><div class="country-opt">Tunisia</div><div class="country-opt">Turkey</div><div class="country-opt">UAE</div><div class="country-opt">Uganda</div><div class="country-opt">Ukraine</div><div class="country-opt">Uruguay</div><div class="country-opt">Uzbekistan</div><div class="country-opt">Venezuela</div><div class="country-opt">Vietnam</div><div class="country-opt">Other</div></div>
+    </div>
+    <div class="age-btns">
+      <button class="age-no" onclick="window.location=&#39;https://google.com&#39;">NO</button>
+      <button class="age-yes" id="ageYes">YES, ENTER</button>
+    </div>
+  </div>
+</div>
+
+<!-- Warning Header -->
+<div class="warn-bar" id="warnBar"><span class="warn-text" id="warnText"><a href="https://t.me/yartsupplies" target="_blank" style="color:#fff;text-decoration:none;"><svg style="width:10px;height:10px;fill:#fff;vertical-align:-1px;margin-right:3px" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg>JOIN THE TELEGRAM</a></span></div>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo"><img src="./Yart Supplies - Menu_files/logo.svg" alt="Puffed"></div>
+  <div class="nav-links">
+    
+    
+    
+    <a href="https://t.me/yartsupplies" target="_blank" class="nav-tg"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></a>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <a href="https://t.me/yartsupplies" class="nav-cta">Shop Now</a>
+    <button class="nav-cart" id="navCart"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.16 6.66l-.67-2H2v2h3.16l3.6 7.59-1.35 2.44C7.15 17.15 7 17.56 7 18c0 1.1.9 2 2 2h12v-2H9.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0022 6H5.21l-.94-2H1v2h2l3.6 7.59L7.16 6.66z"></path></svg><span class="nav-cart-count show" id="navCartCount">1</span></button>
+  </div>
+</nav>
+
+<!-- Spacer for fixed nav -->
+<div style="height:76px;"></div>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Candy Bag On The Outside<br><em>High On The Inside.</em></h1>
+  <p>Discreet delivery, no medical card needed, and 1,000+ happy customers. The #1 online marketplace for premium products.</p>
+  
+  <div style="margin-top:16px;font-size:.65rem;color:#444;letter-spacing:.3px;"><span style="color:#c9a96e;">★★★★★</span> 1,000+ Customers</div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee">
+    <span>Fast &amp; Discreet Shipping</span>
+    <span>Buy One Get Another $15</span>
+    <span>2-3 Day Delivery</span>
+    <span>High Quality Products</span>
+    <span>Wide Flavor Variety</span>
+    <span>1,000+ Happy Customers</span>
+    <!-- duplicate for seamless loop -->
+   <span>Fast &amp; Discreet Shipping</span>
+    <span>Buy One Get Another $15</span>
+    <span>2-3 Day Delivery</span>
+    <span>High Quality Products</span>
+    <span>Wide Flavor Variety</span>
+    <span>1,000+ Happy Customers</span>
+  </div>
+</div>
+
+<!-- Categories -->
+<section id="categories">
+  <h2 class="section-title">Shop by Category</h2>
+  <div class="categories">
+    <a href="https://yart.supplies" class="cat-card">
+      <div class="cat-card-inner">
+        <img src="./Yart Supplies - Menu_files/cat-dispos.png" alt="Dispos">
+        <div class="cat-overlay"><h3>Dispos</h3></div>
+      </div>
+    </a>
+    <a href="https://yart.supplies" class="cat-card glow">
+      <div class="cat-card-inner">
+        <img src="./Yart Supplies - Menu_files/cat-nic-vapes.png" alt="Nic Vapes">
+        <div class="cat-overlay"><h3>Nic Vapes</h3></div>
+      </div>
+    </a>
+    <a href="https://yart.supplies" class="cat-card">
+      <div class="cat-card-inner">
+        <img src="./Yart Supplies - Menu_files/cat-bulk.png" alt="Bulk Prices">
+        <div class="cat-overlay"><h3>Bulk Prices</h3></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Products -->
+<section id="products">
+  <h2 class="section-title">Candy Bag On The Outside, High In The Inside</h2>
+
+  <div class="promo-banner">
+    <p>Buy one, get another for <span>$15</span> + free shipping on 2+</p>
+  </div>
+
+  <div class="auth-bar">
+    <p><strong>100% Authentic Products</strong> — All c*rded from dispens.</p>
+  </div>
+
+  <p style="text-align:center;font-size:.68rem;color:#555;margin-bottom:24px;">Click "View Flavors" to select a flavor and add to cart</p>
+
+  <!-- Weed Dispos -->
+  <h3 class="product-section-title" id="weed-dispos">Weed Dispos</h3>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-badge">Best Seller</div>
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/muha-3rd-gen.png" alt="Muha 3rd Gen"></div>
+      <div class="product-info">
+        <h3>Muha Meds (3rd Gen)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$30.00</div>
+        <button class="product-btn" data-name="Muha 3rd Gen" data-price="30">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/raw-garden.png" alt="Raw Garden Sprout"></div>
+      <div class="product-info">
+        <h3>Raw Garden (Sprout)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$30.00</div>
+        <button class="product-btn" data-name="Raw Garden Sprout" data-price="30">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/boutiq-v5.png" alt="Boutiq V5"></div>
+      <div class="product-info">
+        <h3>Boutiq (V5 2G)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$30.00</div>
+        <button class="product-btn" data-name="Boutiq V5" data-price="30">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/wholemelts.png" alt="Wholemelts Phase 4"></div>
+      <div class="product-info">
+        <h3>Wholemelts (Phase 4)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$30.00</div>
+        <button class="product-btn" data-name="Wholemelts Phase 4" data-price="30">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/hitz.png" alt="Hitz Infinity"></div>
+      <div class="product-info">
+        <h3>Hitz (Infinity)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$25.00</div>
+        <button class="product-btn" data-name="Hitz Infinity" data-price="25">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/besos.png" alt="Besos"></div>
+      <div class="product-info">
+        <h3>Besos</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$25.00</div>
+        <button class="product-btn" data-name="Besos" data-price="25">View Flavors</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nic Vapes -->
+  <h3 class="product-section-title" id="nic-vapes">Nic Vapes</h3>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-badge">Popular</div>
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/geekbar-pulse-x.png" alt="Geekbar Pulse X"></div>
+      <div class="product-info">
+        <h3>Geekbar (Pulse X)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$30.00</div>
+        <button class="product-btn" data-name="Geekbar Pulse X" data-price="30">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/foger-switch-pro.png" alt="Foger Switch Pro"></div>
+      <div class="product-info">
+        <h3>Foger (Switch Pro)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$30.00</div>
+        <button class="product-btn" data-name="Foger Switch Pro" data-price="30">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/raz-ryl.png" alt="Raz Ryl"></div>
+      <div class="product-info">
+        <h3>Raz Ryl</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$25.00</div>
+        <button class="product-btn" data-name="Raz Ryl" data-price="25">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/lost-mary-pro.png" alt="Lost Mary Pro"></div>
+      <div class="product-info">
+        <h3>Lost Mary (Pro)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$25.00</div>
+        <button class="product-btn" data-name="Lost Mary Pro" data-price="25">View Flavors</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/ria.png" alt="Ria NV30K"></div>
+      <div class="product-info">
+        <h3>Ria (NV30K)</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$25.00</div>
+        <button class="product-btn" data-name="Ria NV30K" data-price="25">View Flavors</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Prices -->
+  <h3 class="product-section-title" id="bulk">Bulk Prices <span style="font-size:.7rem;font-weight:500;color:#555;">— Shipped Same Day</span></h3>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-badge">Bulk</div>
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/muha-3rd-gen.png" alt="Muha 3rd Gen 10PC"></div>
+      <div class="product-info">
+        <h3>Muha Meds 10PC</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$190.00</div>
+        <button class="product-btn" data-name="Muha 3rd Gen 10PC" data-price="190">Add to Cart</button>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-badge">Bulk</div>
+      <div class="product-img"><img src="./Yart Supplies - Menu_files/geekbar-pulse-x.png" alt="Geekbar Pulse X 10PC"></div>
+      <div class="product-info">
+        <h3>Geekbar Pulse X 10PC</h3>
+        <div class="product-stars">★★★★★</div>
+        <div class="product-price">$170.00</div>
+        <button class="product-btn" data-name="Geekbar Pulse X 10PC" data-price="170">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- FAQ -->
+<section id="faq">
+  <h2 class="section-title">Frequently Asked Questions</h2>
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">How do I place an order?</button>
+      <div class="faq-a">Browse our products, select a flavor, and add to cart. Once you're done, copy your order summary and paste it to @wbujayden on telegram to complete payment.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What payment methods do you accept?</button>
+      <div class="faq-a">We accept Apple Pay, Google Pay, Visa, Mastercard, and debit cards — (through giftcards). Message us on Telegram to learn more.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">How long does shipping take?</button>
+      <div class="faq-a">US orders arrive in 2–4 days. International orders take about 5–7 days. You’ll receive tracking once your order ships.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Where can I get my package shipped to?</button>
+      <div class="faq-a">We can ship to your doorstep, mailbox, or pickup point. All packages are shipped discreetly.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What does the packaging look like?</button>
+      <div class="faq-a">All orders are shipped in plain, discreet packaging with no branding or labels that indicate the contents.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What will show up on my bank statement?</button>
+      <div class="faq-a">“G2A” is what will show up on your bank statement. It’s a trusted gift card marketplace we use to securely accept all payments. <a href="https://www.g2a.com/" target="_blank" style="color:#c9a96e;text-decoration:underline;">Visit G2A →</a><br><span style="color:#e57373;margin-top:4px;display:inline-block;">Don’t buy a gift card without DMing us first — you might be buying the wrong one.</span></div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Are all products authentic?</button>
+      <div class="faq-a">Yes. Every product we sell is 100% authentic, sealed, and sourced directly from verified distributors.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Order Drawer -->
+<div class="order-overlay" id="orderOverlay"></div>
+<div class="order-drawer" id="orderDrawer">
+  <div class="order-drawer-header">
+    <h3>Your Order</h3>
+    <button class="order-close" id="orderClose">×</button>
+  </div>
+  <div class="order-items" id="orderItems">
+    <div class="order-empty" id="orderEmpty" style="display: none;">Your order is empty.</div>
+  <div class="order-item"><div><span class="order-item-name">Muha 3rd Gen</span><div class="order-item-flavor">Blue Slushie (Indica)</div></div><span class="order-item-price">$30.00</span><button class="order-item-remove" data-idx="0">✕</button></div></div>
+  <div class="order-footer" id="orderFooter" style="">
+    <div class="order-eta" id="orderEta"><span class="order-eta-icon">📦</span><span class="order-eta-text">Estimated arrival: <strong>Apr 8 – Apr 10</strong></span></div>
+    <div class="order-line"><span>Subtotal</span><span id="orderSubtotal">$30.00</span></div>
+    <div class="order-line"><span>Shipping</span><span id="orderShipping">$5.00</span></div>
+    <div class="order-line total"><span>Total USD</span><span id="orderTotal">$35.00</span></div>
+    <button class="order-copy-btn" id="orderCopy">📋 Copy Order Summary</button>
+  </div>
+</div>
+<div class="order-toast" id="orderToast">Copied to clipboard!</div>
+
+<!-- Flavor Picker Modal -->
+<div class="modal-bg" id="flavorModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="flavorTitle">Muha 3rd Gen</h3>
+      <p>Choose a flavor before adding to your order.</p>
+    </div>
+    <div class="flavor-list" id="flavorList"><div class="flavor-item selected">Blue Slushie (Indica)</div><div class="flavor-item">Strawberry Runtz (Hybrid)</div><div class="flavor-item">Watermelon Zkittlez (Hybrid)</div><div class="flavor-item">Gushers (Hybrid)</div><div class="flavor-item">Wedding Cake (Indica)</div><div class="flavor-item">Gelato (Hybrid)</div><div class="flavor-item">Pineapple Express (Sativa)</div><div class="flavor-item">Biscotti (Hybrid)</div><div class="flavor-item">Mango Kush (Indica)</div><div class="flavor-item">Apple Fritter (Hybrid)</div><div class="flavor-item">Tropical Punch (Hybrid)</div><div class="flavor-item">Lemon Cherry Gelato (Hybrid)</div></div>
+    <div class="modal-footer">
+      <button class="modal-cancel" id="flavorCancel">Cancel</button>
+      <button class="modal-add" id="flavorAdd">Add to Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Popup -->
+<div class="modal-bg pay-popup" id="payPopup">
+  <div class="modal-box">
+    <button class="pay-close" id="payClose">×</button>
+    <div class="pay-body">
+      <div class="pay-icon">✓</div>
+      <h3>Order Copied to Clipboard!</h3>
+      <p>Paste your order summary in our Telegram chat to continue with payment.</p>
+      <a href="https://t.me/yartsupplies" target="_blank" class="pay-tg">Open Telegram →</a>
+    </div>
+    <div class="pay-methods">
+      <p>We accept the following payment methods via gift cards. Message us to learn more.</p>
+      <div class="pay-logos">
+        <span class="pay-logo">Apple Pay</span>
+        <span class="pay-logo">G Pay</span>
+        <span class="pay-logo">VISA</span>
+        <span class="pay-logo">Mastercard</span>
+        <span class="pay-logo">Debit</span>
+        <span class="pay-logo" style="color:#666;">&amp; more</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  © 2026 Yart Supplies. All rights reserved.
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('open');
+  }
+
+  // Age gate with custom country dropdown
+  (function() {
+    var COUNTRIES = ['United States','Canada','United Kingdom','Afghanistan','Albania','Algeria','Argentina','Armenia','Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Bolivia','Bosnia and Herzegovina','Brazil','Bulgaria','Cambodia','Cameroon','Chile','China','Colombia','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Dominican Republic','Ecuador','Egypt','El Salvador','Estonia','Ethiopia','Finland','France','Georgia','Germany','Ghana','Greece','Guatemala','Haiti','Honduras','Hong Kong','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Kuwait','Latvia','Lebanon','Lithuania','Luxembourg','Malaysia','Mexico','Morocco','Myanmar','Nepal','Netherlands','New Zealand','Nicaragua','Nigeria','North Korea','Norway','Oman','Pakistan','Panama','Paraguay','Peru','Philippines','Poland','Portugal','Puerto Rico','Qatar','Romania','Russia','Saudi Arabia','Serbia','Singapore','Slovakia','Slovenia','South Africa','South Korea','Spain','Sri Lanka','Sweden','Switzerland','Taiwan','Tanzania','Thailand','Trinidad and Tobago','Tunisia','Turkey','UAE','Uganda','Ukraine','Uruguay','Uzbekistan','Venezuela','Vietnam','Other'];
+    var trigger = document.getElementById('countryTrigger');
+    var dropdown = document.getElementById('countryDropdown');
+    var searchInput = document.getElementById('countrySearch');
+    var listEl = document.getElementById('countryList');
+    var selectedCountry = '';
+
+    function buildList(filter) {
+      listEl.innerHTML = '';
+      var f = (filter || '').toLowerCase();
+      COUNTRIES.forEach(function(c) {
+        if (f && c.toLowerCase().indexOf(f) === -1) return;
+        var el = document.createElement('div');
+        el.className = 'country-opt' + (c === selectedCountry ? ' selected' : '');
+        el.textContent = c;
+        el.addEventListener('click', function() {
+          selectedCountry = c;
+          trigger.textContent = c;
+          trigger.classList.add('has-value');
+          dropdown.classList.remove('open');
+        });
+        listEl.appendChild(el);
+      });
+    }
+    trigger.addEventListener('click', function() {
+      dropdown.classList.toggle('open');
+      if (dropdown.classList.contains('open')) { searchInput.value = ''; buildList(''); searchInput.focus(); }
+    });
+    searchInput.addEventListener('input', function() { buildList(this.value); });
+    buildList('');
+
+    document.getElementById('ageYes').addEventListener('click', function() {
+      if (!selectedCountry) { trigger.style.borderColor = '#e57373'; return; }
+      trigger.style.borderColor = '';
+      window.__userCountry = selectedCountry;
+      var ag = document.getElementById('ageGate');
+      ag.classList.add('fade-out');
+      setTimeout(function(){ ag.classList.add('hidden'); }, 400);
+    });
+  })();
+
+  // Warning text glitch swap
+  (function() {
+    var wt = document.getElementById('warnText');
+    var msgs = [
+      'WARNING: THESE PRODUCTS CONTAIN NICOTINE.',
+      '<a href="https://t.me/puffedportal" target="_blank" style="color:#fff;text-decoration:none;"><svg style="width:10px;height:10px;fill:#fff;vertical-align:-1px;margin-right:3px" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>JOIN THE TELEGRAM</a>'
+    ];
+    var idx = 0;
+    setInterval(function() {
+      wt.classList.add('glitch');
+      setTimeout(function() {
+        idx = (idx + 1) % msgs.length;
+        wt.innerHTML = msgs[idx];
+        wt.classList.remove('glitch');
+      }, 150);
+    }, 3000);
+  })();
+
+  // Cart icon opens drawer
+  document.getElementById('navCart').addEventListener('click', function() {
+    var o = document.getElementById('orderOverlay');
+    var d = document.getElementById('orderDrawer');
+    o.classList.add('open'); d.classList.add('open');
+  });
+
+  // Category glow loop
+  (function() {
+    var cards = document.querySelectorAll('.cat-card'), cur = 0;
+    function next() { cards.forEach(function(c){c.classList.remove('glow')}); cards[cur].classList.add('glow'); cur = (cur+1)%cards.length; }
+    next(); setInterval(next, 2000);
+  })();
+
+  // ── Flavor Data ──
+  var FLAVORS = {
+    'Muha 3rd Gen': ['Blue Slushie (Indica)','Strawberry Runtz (Hybrid)','Watermelon Zkittlez (Hybrid)','Gushers (Hybrid)','Wedding Cake (Indica)','Gelato (Hybrid)','Pineapple Express (Sativa)','Biscotti (Hybrid)','Mango Kush (Indica)','Apple Fritter (Hybrid)','Tropical Punch (Hybrid)','Lemon Cherry Gelato (Hybrid)'],
+    'Raw Garden Sprout': ['OG Kush (Hybrid)','GG4 / Gorilla Glue #4 (Hybrid)','Girl Scout Cookies (Hybrid)','Gelato (Hybrid)','Biscotti (Indica)','Green Crack (Sativa)','Strawberry Jack #13 (Sativa)','Banana Punch (Hybrid)'],
+    'Boutiq V5': ['Italian Ice (Hybrid) x Lemon Cherry (Hybrid) x Z Runtz (Indica)','Cherry Lime (Sativa) x Crunch Berry (Indica) x Orange Mochi (Hybrid)','Grape Soda (Indica) x Glowberry (Indica) x Midnight Z (Indica)','Maui Wowie (Sativa) x Gelato 41 (Hybrid) x Mango Melon (Indica)','Sour Tangie (Sativa) x NYC Sour (Sativa) x Passion Fruit (Sativa)','Blue Matcha (Sativa) x Acai Berry (Sativa) x Sour Slush (Sativa)','Arctic Frost (Hybrid) x Rocket Pop (Hybrid) x Tropic Haze (Sativa)','Orange Slush (Sativa) x Mango Runtz (Indica) x Guava Gelato (Hybrid)'],
+    'Wholemelts Phase 4': ['Candy Skunk x Black Cherry Pie (Hybrid)','Forbidden Trufflez x Cherry Zlushy (Hybrid)','Guava Marmalade x Citrus Rush (Hybrid)','Mango Puree x Mamba OG (Hybrid)','Zour Candy Jack x Rainbow Mintz (Hybrid)','Limon Cherry Sorbet x Moonbow (Hybrid)','OG Frozen Grape Pop x Mount Kushmore (Hybrid)','Flame Brailer x Grape Gasoline (Hybrid)','Berrys Dosido x Zoap Tart (Hybrid)','Mangosteen Kush x Electric Lemonade (Hybrid)'],
+    'Hitz Infinity': ['Sky Walker OG (Indica)','LA Confidential (Indica)','Sour Gush (Hybrid)','Pink Champagne (Hybrid)','White Peach (Hybrid)','Tropical Blast (Hybrid)','Citrus Sunset (Sativa)','NYC Sour (Sativa)','Sour Nova (Sativa)','Blue Paradise (Hybrid)','FKN Apple (Hybrid)','Strawberry Lime (Hybrid)','Cherry Berry (Indica)','Red Velvet (Indica)','Gummy Splash (Indica)'],
+    'Besos': ['Bubblegum Gelato (Hybrid)','Rainbow Belts (Indica)','Birthday Cake (Hybrid)','Sour Zkittlez (Sativa)','Papaya Punch (Hybrid)','Tres Leches (Hybrid)','Cherry Berry Kiss (Hybrid)','Watermelon Kiss (Hybrid)','Pina Express (Sativa)','Limon (Sativa)','Horchata (Sativa)','Mangoneada (Indica)','Frozen Grapes (Indica)','Purple Kush (Indica)','LA Confidential (Indica)','Bomb Pop Kiss (Indica)','Choco Banana (Indica)','Vanilla (Indica)'],
+    'Geekbar Pulse X': ['Blue Razz Ice','Miami Mint','Watermelon Ice','Sour Apple Ice','Blue Rancher','Peach Perfect Slush','Strawberry Watermelon','Sour Mango Pineapple','Grape Slush','Pink Berry Lemonade','Blackberry B-Burst','Lemon Heads','Strawberry Kiwi Ice','Orange Fcuking Fab','Raspberry Peach Lime','Cool Mint','Blackberry Blueberry','Wild Cherry Slush','Blueberry Jam','Grapefruit Refresher','Strawberry B-Burst'],
+    'Foger Switch Pro': ['Blue Razz Ice','Watermelon Ice','Miami Mint','Sour Apple Ice','Strawberry Watermelon','Blue Rancher B-POP','Strawberry Banana','Mexico Mango','Strawberry Kiwi','Juicy Peach Ice','Pineapple Coconut Ice','Pink Lemonade','Grape Slush','Orange Slush','Cherry Slush','Cool Mint','Blueberry Watermelon','Watermelon Bubble Gum'],
+    'Raz Ryl': ['Blue Razz Ice','Miami Mint','Watermelon Ice','Night Crawler','Dragonfruit Lemonade','Peach Passionfruit','Sour Apple','Raspberry Watermelon','Triple Berry','Banana Ice','Rainbow','Sour Strawberry','White Gummy Ice','Icy Mint','Blue Razz Bliss'],
+    'Lost Mary Pro': ['Watermelon Ice','Blue Razz Ice','Miami Mint','Strawberry Ice','Sour Apple Ice','Pineapple Ice','Rainbow Sherbet','Rocket Popsicle','Dragon Drink','Tropical Punch','Blue Baja Splash','Mango Twist','Pina Colada'],
+    'Ria NV30K': ['Blue Razz Ice','Watermelon Ice','Miami Mint','Crazy Berry','Fcuking Fab','Dualicious','Blueberry Punch','Peach Gummy','Pineapple Lime','Sour Strawberry Dragon','Pink Raz Lemonade','Watermelon B-Pop']
+  };
+
+  // ── Order / Cart Logic ──
+  (function() {
+    var orderItems = [];
+    var pendingProduct = null;
+
+    function getShipping() {
+      if (orderItems.length >= 2) return 0;
+      return (window.__userCountry === 'United States') ? 5 : 10;
+    }
+
+    var overlay  = document.getElementById('orderOverlay');
+    var drawer   = document.getElementById('orderDrawer');
+    var itemsEl  = document.getElementById('orderItems');
+    var emptyEl  = document.getElementById('orderEmpty');
+    var footerEl = document.getElementById('orderFooter');
+    var subEl    = document.getElementById('orderSubtotal');
+    var shipEl   = document.getElementById('orderShipping');
+    var totalEl  = document.getElementById('orderTotal');
+    var copyBtn  = document.getElementById('orderCopy');
+    var toast    = document.getElementById('orderToast');
+
+    // Flavor modal elements
+    var fModal   = document.getElementById('flavorModal');
+    var fTitle   = document.getElementById('flavorTitle');
+    var fList    = document.getElementById('flavorList');
+    var fAdd     = document.getElementById('flavorAdd');
+    var fCancel  = document.getElementById('flavorCancel');
+
+    // Payment popup elements
+    var payPopup = document.getElementById('payPopup');
+    var payClose = document.getElementById('payClose');
+
+    function openDrawer()  { overlay.classList.add('open'); drawer.classList.add('open'); }
+    function closeDrawer() { overlay.classList.remove('open'); drawer.classList.remove('open'); }
+    overlay.addEventListener('click', closeDrawer);
+    document.getElementById('orderClose').addEventListener('click', closeDrawer);
+
+    // ── Flavor Modal ──
+    function openFlavorModal(name, price) {
+      pendingProduct = { name: name, price: price };
+      fTitle.textContent = name;
+      fList.innerHTML = '';
+      fAdd.disabled = true;
+      var flavors = FLAVORS[name] || [];
+      flavors.forEach(function(f) {
+        var el = document.createElement('div');
+        el.className = 'flavor-item';
+        el.textContent = f;
+        el.addEventListener('click', function() {
+          fList.querySelectorAll('.flavor-item').forEach(function(x){x.classList.remove('selected')});
+          el.classList.add('selected');
+          fAdd.disabled = false;
+        });
+        fList.appendChild(el);
+      });
+      fModal.classList.add('open');
+    }
+    function closeFlavorModal() { fModal.classList.remove('open'); pendingProduct = null; }
+    fCancel.addEventListener('click', closeFlavorModal);
+    fModal.addEventListener('click', function(e) { if (e.target === fModal) closeFlavorModal(); });
+
+    fAdd.addEventListener('click', function() {
+      var sel = fList.querySelector('.flavor-item.selected');
+      if (!sel || !pendingProduct) return;
+      var basePrice = pendingProduct.price;
+      var discounted = getDiscountedPrice(basePrice, pendingProduct.name);
+      orderItems.push({ name: pendingProduct.name, price: discounted, basePrice: basePrice, flavor: sel.textContent });
+      closeFlavorModal();
+      render();
+      openDrawer();
+    });
+
+    // Bulk product names (excluded from BOGO/discount)
+    var BULK_NAMES = ['Muha 3rd Gen 10PC', 'Geekbar Pulse X 10PC'];
+    function isBulk(name) { return BULK_NAMES.indexOf(name) !== -1; }
+
+    // ── Pricing: 1st = full, 2nd = $15, 3rd+ = base - $5 (bulk excluded) ──
+    function getDiscountedPrice(basePrice, name) {
+      if (isBulk(name)) return basePrice;
+      var nonBulkCount = orderItems.filter(function(it){ return !isBulk(it.name); }).length;
+      if (nonBulkCount === 0) return basePrice;
+      if (nonBulkCount === 1) return 15;
+      return Math.max(0, basePrice - 5);
+    }
+
+    // Recalculate all prices when items change
+    function recalcPrices() {
+      var nonBulkIdx = 0;
+      for (var i = 0; i < orderItems.length; i++) {
+        var base = orderItems[i].basePrice;
+        if (isBulk(orderItems[i].name)) {
+          orderItems[i].price = base;
+        } else {
+          if (nonBulkIdx === 0) orderItems[i].price = base;
+          else if (nonBulkIdx === 1) orderItems[i].price = 15;
+          else orderItems[i].price = Math.max(0, base - 5);
+          nonBulkIdx++;
+        }
+      }
+    }
+
+    // ── Render Order ──
+    function render() {
+      recalcPrices();
+      itemsEl.querySelectorAll('.order-item').forEach(function(el){el.remove()});
+      if (orderItems.length === 0) { emptyEl.style.display = ''; footerEl.style.display = 'none'; return; }
+      emptyEl.style.display = 'none';
+      footerEl.style.display = '';
+
+      orderItems.forEach(function(item, i) {
+        var row = document.createElement('div');
+        row.className = 'order-item';
+        var nameHtml = '<div><span class="order-item-name">' + item.name + '</span>';
+        if (item.flavor) nameHtml += '<div class="order-item-flavor">' + item.flavor + '</div>';
+        nameHtml += '</div>';
+        var priceHtml = '<span class="order-item-price">$' + item.price.toFixed(2);
+        if (!isBulk(item.name) && item.price === 15 && item.basePrice > 15) priceHtml += ' <span style="font-size:.6rem;color:#666;font-weight:400">(BOGO)</span>';
+        else if (!isBulk(item.name) && item.price < item.basePrice && item.price !== 15) priceHtml += ' <span style="font-size:.6rem;color:#666;font-weight:400">(-$5)</span>';
+        priceHtml += '</span>';
+        row.innerHTML = nameHtml + priceHtml +
+          '<button class="order-item-remove" data-idx="' + i + '">✕</button>';
+        itemsEl.appendChild(row);
+      });
+
+      itemsEl.querySelectorAll('.order-item-remove').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          orderItems.splice(parseInt(this.dataset.idx), 1);
+          render();
+        });
+      });
+
+      var subtotal = orderItems.reduce(function(s,it){return s+it.price},0);
+      var shipping = getShipping();
+      subEl.textContent  = '$' + subtotal.toFixed(2);
+      shipEl.textContent = shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2);
+      totalEl.textContent = '$' + (subtotal + shipping).toFixed(2);
+
+      // Update cart badge
+      var badge = document.getElementById('navCartCount');
+      if (orderItems.length > 0) { badge.textContent = orderItems.length; badge.classList.add('show'); }
+      else { badge.classList.remove('show'); }
+
+      // ETA
+      var isUS = (window.__userCountry === 'United States');
+      var minDays = isUS ? 2 : 5;
+      var maxDays = isUS ? 4 : 7;
+      var now = new Date();
+      var d1 = new Date(now); d1.setDate(d1.getDate() + minDays);
+      var d2 = new Date(now); d2.setDate(d2.getDate() + maxDays);
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var fmt = function(d) { return months[d.getMonth()] + ' ' + d.getDate(); };
+      var etaEl = document.getElementById('orderEta');
+      etaEl.innerHTML = '<span class="order-eta-icon">📦</span>' +
+        '<span class="order-eta-text">Estimated arrival: <strong>' + fmt(d1) + ' – ' + fmt(d2) + '</strong>' +
+        (isUS ? '' : ' (International)') + '</span>';
+    }
+
+    // ── Add to Cart (with flavor picker) ──
+    document.querySelectorAll('.product-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var name  = this.dataset.name;
+        var price = parseFloat(this.dataset.price);
+        if (!name || isNaN(price)) return;
+
+        // If product has flavors, open picker; otherwise add directly
+        if (FLAVORS[name]) {
+          openFlavorModal(name, price);
+        } else {
+          var discounted = getDiscountedPrice(price, name);
+          var bulkFlavor = isBulk(name) ? 'Mix' : '';
+          orderItems.push({ name: name, price: discounted, basePrice: price, flavor: bulkFlavor });
+          render();
+          openDrawer();
+          var b = this; b.textContent = '✓ Added';
+          setTimeout(function(){b.textContent = 'Add to Cart';}, 800);
+        }
+      });
+    });
+
+    // ── Copy & Show Payment Popup ──
+    copyBtn.addEventListener('click', function() {
+      var subtotal = orderItems.reduce(function(s,it){return s+it.price},0);
+      var shipping = getShipping();
+      var total = subtotal + shipping;
+      var country = window.__userCountry || 'Not specified';
+
+      var text = 'PUFFED ORDER\n';
+      text += '─────────────────────\n';
+      text += 'Country: ' + country + '\n';
+      text += '─────────────────────\n';
+      orderItems.forEach(function(it) {
+        var line = '$' + it.price.toFixed(2) + '  ' + it.name;
+        if (it.flavor) line += ' — ' + it.flavor;
+        text += line + '\n';
+      });
+      text += '─────────────────────\n';
+      text += 'Subtotal: $' + subtotal.toFixed(2) + '\n';
+      text += 'Shipping: ' + (shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2)) + '\n';
+      text += 'Total: $' + total.toFixed(2) + ' USD\n';
+
+      navigator.clipboard.writeText(text).then(function() {
+        copyBtn.textContent = '✓ Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(function() {
+          copyBtn.textContent = '📋 Copy Order Summary';
+          copyBtn.classList.remove('copied');
+        }, 1800);
+        // Show payment popup
+        closeDrawer();
+        payPopup.classList.add('open');
+      });
+    });
+
+    // Payment popup close
+    payClose.addEventListener('click', function() { payPopup.classList.remove('open'); });
+    payPopup.addEventListener('click', function(e) { if (e.target === payPopup) payPopup.classList.remove('open'); });
+  })();
+</script>
+
+<script defer="" src="./Yart Supplies - Menu_files/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;3d26b0352966468fae7ac8f2443c26bd&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+
+</body></html>
